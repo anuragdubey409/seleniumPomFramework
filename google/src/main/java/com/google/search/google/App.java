@@ -1,3 +1,15 @@
+/**
+
+Ignore This class as this is src/main/java
+
+We deal with the test folder in automation framework
+
+**/
+
+
+
+
+
 package com.google.search.google;
 
 import java.util.ArrayList;
