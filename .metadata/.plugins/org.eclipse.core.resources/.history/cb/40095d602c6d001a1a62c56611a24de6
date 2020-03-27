@@ -1,0 +1,26 @@
+package com.google.pages;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.PageFactory;
+import org.testng.Assert;
+
+import com.google.utils.DriverHelper;
+
+public class DashBoardPage extends DriverHelper{
+	
+	
+	
+	public DashBoardPage(WebDriver driver) {
+		super(driver);
+	}
+
+	public void verifyTheDashboardPageTitle(String title) {
+		String windowTitle=getPageTitle();
+		Assert.assertEquals(windowTitle,title);
+	}
+
+	public <T> T navigateToMenu(String menuTitle,Class className) {
+	
+		return (T) PageFactory.initElements(driver, className);
+	}
+}

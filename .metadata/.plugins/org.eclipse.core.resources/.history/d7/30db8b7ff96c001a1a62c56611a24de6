@@ -1,0 +1,28 @@
+package com.google.search.google;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class App 
+{
+    public static void main( String[] args )
+    {
+    	//List<String> l2 = null;
+    	Map<String,List<String>> key=new HashMap<String, List<String>>();
+    	for(String s:key.keySet()) {
+    		for(List<String> l1:key.values()) {
+    			l1.add("Anurag");
+    			l1.add("Is");
+    			l1.add("The");
+    			key.put("Quote", l1);
+    		}
+    		 
+    	}
+    	
+    	key.forEach(ke,li->{
+    		
+    	});
+    }
+}

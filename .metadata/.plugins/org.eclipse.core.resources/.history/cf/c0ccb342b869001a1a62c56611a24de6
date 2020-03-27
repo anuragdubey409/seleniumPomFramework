@@ -1,0 +1,15 @@
+package com.google.utils;
+
+import org.testng.Assert;
+
+public class AssertionType {
+
+	public void validateOnEqual(String actual, String expected) {
+		Assert.assertEquals(actual, expected);
+	}
+
+	public void validateOnTrue(boolean condition) {
+		Assert.assertTrue(condition);
+	}
+
+}

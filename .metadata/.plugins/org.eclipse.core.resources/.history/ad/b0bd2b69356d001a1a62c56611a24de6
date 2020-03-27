@@ -1,0 +1,37 @@
+package com.google.pages;
+
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+
+import com.google.utils.AssertionType;
+import com.google.utils.DriverHelper;
+
+public class DashBoardPage extends DriverHelper {
+
+	@FindBy(xpath = "//div[@class='desktop-nav-left-container']//ul[@class='primary-links']//li")
+	private List<WebElement> menuLength;
+
+	public DashBoardPage(WebDriver driver) {
+		super(driver);
+	}
+
+	public void verifyTheDashboardPageTitle(String title) {
+		String windowTitle = getPageTitle();
+		AssertionType.validateOnEqual(windowTitle, title);
+	}
+
+	public <T> T navigateToMenu(String menuTitle, Class<T> className) {
+		for (WebElement menu : menuLength) {
+			String menuItem = getTextOfWebElement(menu);
+			if (StringUtils.containsIgnoreCase(menuTitle, menuItem)) {
+
+			}
+		}
+		return PageFactory.initElements(driver, className);
+	}
+}

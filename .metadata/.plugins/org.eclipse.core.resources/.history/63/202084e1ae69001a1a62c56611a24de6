@@ -1,0 +1,15 @@
+url=https://ui.cogmento.com/
+user=anuragdubey409@gmail.com
+pass=goodluck@1
+
+#pass the name of the browser
+# ex :- chrome,ie,firefox
+Browser=chrome
+
+
+
+#global timeouts
+PageLoadTimeOut=10
+ElementVisiblity=10
+ElementEnabled=10
+ElementClickable=10

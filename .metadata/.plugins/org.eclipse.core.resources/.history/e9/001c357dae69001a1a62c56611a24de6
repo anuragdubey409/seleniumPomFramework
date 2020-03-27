@@ -1,0 +1,14 @@
+url=https://ui.cogmento.com/
+user=anuragdubey409@gmail.com
+pass=goodluck@1
+
+#pass true to select the type of browser
+Browser=chrome
+
+
+
+#global timeouts
+PageLoadTimeOut=10
+ElementVisiblity=10
+ElementEnabled=10
+ElementClickable=10

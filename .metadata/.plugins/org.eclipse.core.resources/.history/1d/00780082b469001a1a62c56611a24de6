@@ -1,0 +1,40 @@
+package com.google.utils;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+
+public class LoginHelper {
+	private DriverTestCase driverTestCase;
+	private DriverHelper driverHelper;
+	private WebDriver driver;
+
+	public LoginHelper(WebDriver driver) {
+		this.driver = driver;
+		driverHelper=new DriverHelper(driver);
+		PageFactory.initElements(driver, this);
+	}
+
+	@FindBy(css = "input[name='email']")
+	private WebElement username;
+
+	@FindBy(css = "input[name='password']")
+	private WebElement password;
+
+	@FindBy(css = "form[class*='ui']>div>:last-child")
+	private WebElement loginButton;
+
+	public void setUserName(String userName) throws Exception {
+		driverHelper.setText(username, userName);
+	}
+
+	public void setPassword(String password) throws Exception {
+		driverHelper.setText(this.password, password);
+	}
+
+	public void clickOnLoginButton() throws Exception {
+		driverHelper.click(loginButton);
+	}
+}

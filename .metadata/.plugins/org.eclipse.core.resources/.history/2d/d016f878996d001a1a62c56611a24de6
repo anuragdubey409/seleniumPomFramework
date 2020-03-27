@@ -1,0 +1,170 @@
+package com.google.utils;
+
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import com.google.utils.JavaScriptExecutor;
+import com.google.utils.PropertyReader;
+
+public class SynchronizedWaits {
+
+	protected WebDriver driver;
+	private WebDriverWait wait;
+	private JavaScriptExecutor jsOps;
+	private URL url;
+	private HttpURLConnection connection;
+	protected int pageLoadTimeOut, elementVisiblity, elementEnabled, elementClickable;
+
+	public SynchronizedWaits(WebDriver driver) {
+		this.driver = driver;
+		jsOps = new JavaScriptExecutor(driver);
+		this.InitializeTimeOuts();
+	}
+
+	/**
+	 * Initialize the timeout values
+	 */
+	private void InitializeTimeOuts() {
+		pageLoadTimeOut = Integer.parseInt(PropertyReader.getProperty("PageLoadTimeOut"));
+		elementVisiblity = Integer.parseInt(PropertyReader.getProperty("ElementVisiblity"));
+		elementEnabled = Integer.parseInt(PropertyReader.getProperty("ElementEnabled"));
+		elementClickable = Integer.parseInt(PropertyReader.getProperty("ElementClickable"));
+	}
+
+	/**
+	 * get the webElement from String locator
+	 * 
+	 * @param element
+	 * @return
+	 */
+	public WebElement getWebElement(String element) {
+		return driver.findElement(DriverHelper.byLocator(element));
+	}
+
+	/**
+	 * Wait for java script to return complete status
+	 */
+	public void waitForJsLoad() {
+		wait = new WebDriverWait(driver, pageLoadTimeOut);
+		ExpectedCondition<Boolean> jsLoad = new ExpectedCondition<Boolean>() {
+			Object obj = jsOps.execute("return document.readyState");
+
+			public Boolean apply(WebDriver driver) {
+				return obj.toString().equals("complete") || obj.toString().equals("loaded");
+			}
+		};
+		wait.until(jsLoad);
+	}
+
+	/**
+	 * Wait for ajax call to return 0
+	 */
+	public void waitForJQueryToLoad() {
+		wait = new WebDriverWait(driver, pageLoadTimeOut);
+		ExpectedCondition<Boolean> jQuery = new ExpectedCondition<Boolean>() {
+			public Boolean apply(WebDriver driver) {
+				return (Boolean) jsOps.execute("return jQuery.active == 0");
+			}
+		};
+		wait.until(jQuery);
+	}
+
+	/**
+	 * Wait for the page to load completely
+	 */
+	public void waitForCompletePageLoad() {
+		this.waitForJsLoad();
+		this.waitForJQueryToLoad();
+	}
+
+	/**
+	 * Wait for the request to get completed
+	 * 
+	 * @param completeUrl
+	 * @throws IOException
+	 */
+	public void waitForRequestToComplete(String completeUrl) throws IOException {
+		url = new URL(completeUrl);
+		connection = (HttpURLConnection) url.openConnection();
+		connection.connect();
+		while (connection.getResponseCode() < 300) {
+			connection.setReadTimeout(pageLoadTimeOut);
+		}
+	}
+
+	/**
+	 * Wait for the element to be clickable inside DOM
+	 * 
+	 * @param element
+	 */
+	public void waitForTheElementToBeClickable(WebElement element) {
+		wait = new WebDriverWait(driver, elementClickable);
+		wait.until(ExpectedConditions.elementToBeClickable(element));
+	}
+
+	/**
+	 * Wait for the presence of element in the DOM
+	 * 
+	 * @param locator
+	 */
+	public void waitForThePresenceOfElement(By locator) {
+		wait = new WebDriverWait(driver, elementVisiblity);
+		wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+	}
+
+	/**
+	 * Wait for the element to be visible
+	 * 
+	 * @param element
+	 */
+	public void waitForTheElementToBeVisible(WebElement element) {
+		wait = new WebDriverWait(driver, elementVisiblity);
+		wait.until(ExpectedConditions.visibilityOf(element));
+	}
+
+	public void waitForTheElementInvisiblity(WebElement element) {
+		wait = new WebDriverWait(driver, pageLoadTimeOut);
+		wait.until(ExpectedConditions.invisibilityOf(element));
+	}
+
+	/**
+	 * Check for the element i.e enabled or not
+	 * 
+	 * @param element
+	 * @return
+	 */
+	public boolean checkForTheElementEnabled(WebElement element) {
+		boolean flag;
+		try {
+			flag = element.isEnabled();
+		} catch (Exception e) {
+			flag = false;
+		}
+		return flag;
+	}
+
+	/**
+	 * Check for the visibility of the element
+	 * 
+	 * @param element
+	 * @return
+	 */
+	public boolean checkForTheVisiblityOfElement(WebElement element) {
+		boolean flag;
+		try {
+			flag = element.isDisplayed();
+		} catch (Exception e) {
+			flag = false;
+		}
+		return flag;
+	}
+
+}

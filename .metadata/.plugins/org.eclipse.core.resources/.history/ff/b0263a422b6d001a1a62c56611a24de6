@@ -1,0 +1,20 @@
+package com.google.utils;
+
+import com.google.pages.DashBoardPage;
+
+public class PageInstantiation {
+	
+	protected DriverTestCase driverTestCase;
+	protected LoginHelper loginHelper;
+	protected DriverHelper driverHelper;
+	protected JavaScriptExecutor javaScriptExecutor;
+	
+	
+	//pages refrence
+	protected DashBoardPage dashBoardPage;
+	
+	//Data Utils Class 
+	protected PropertyReader reader;
+	protected GlobalDataProvider dataProvider;
+
+}

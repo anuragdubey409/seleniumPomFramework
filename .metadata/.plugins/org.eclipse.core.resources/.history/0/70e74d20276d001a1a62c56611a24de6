@@ -1,0 +1,27 @@
+package com.google.testScript;
+
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
+import com.google.pages.DashBoardPage;
+import com.google.utils.DriverTestCase;
+
+public class LoginToTheApplication extends DriverTestCase {
+	
+	@BeforeClass
+	public void getData() {
+		
+	}
+
+	@Test
+	public void testLoginToTheApplication() {
+		try {
+			// login to the application
+			dashBoardPage = loginToTheApplication(DashBoardPage.class);
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+}

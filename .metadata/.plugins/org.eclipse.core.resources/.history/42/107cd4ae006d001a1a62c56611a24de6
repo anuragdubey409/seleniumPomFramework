@@ -1,0 +1,125 @@
+package com.google.utils;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.ie.InternetExplorerOptions;
+import org.openqa.selenium.support.PageFactory;
+import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.BeforeTest;
+
+import com.google.utils.BrowserType.Browser;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+public class DriverTestCase extends PageInstantiation {
+
+	private WebDriver driver;
+	private String url;
+	BrowserType browser;
+	String userName, password;
+	Map<Object,List<Object>> map;
+
+	@BeforeSuite
+	public void init() throws IOException {
+		reader = new PropertyReader(Constants.appFileName);
+		url = PropertyReader.getProperty("url");
+		userName = PropertyReader.getProperty("user");
+		password = PropertyReader.getProperty("pass");
+	}
+
+	/**
+	 * Set the browser
+	 * 
+	 * @throws Exception
+	 */
+	@BeforeTest
+	public void SetBrowser() throws Exception {
+		setBrowser();
+		switch (browser.getBrowser()) {
+		case Chrome:
+			WebDriverManager.chromedriver().version("80.0").setup();
+			ChromeOptions capabilities = new ChromeOptions();
+			driver = new ChromeDriver(capabilities);
+			break;
+		case IE:
+			WebDriverManager.iedriver().arch64().setup();
+			InternetExplorerOptions capabilites = new InternetExplorerOptions();
+			driver = new InternetExplorerDriver(capabilites);
+			break;
+		case Firefox:
+			WebDriverManager.firefoxdriver().version("").arch64().setup();
+			FirefoxOptions option = new FirefoxOptions();
+			driver = new FirefoxDriver(option);
+			break;
+		default:
+			throw new Exception("browser not reachable excpetion");
+		}
+	}
+
+	/**
+	 * Set The browser for the application to launch
+	 */
+	public void setBrowser() {
+		browser = new BrowserType();
+		String browse = PropertyReader.getProperty("Browser");
+		if (browse.equalsIgnoreCase("chrome")) {
+			browser.setBrowser(Browser.Chrome);
+		} else if (browse.equalsIgnoreCase("IE")) {
+			browser.setBrowser(Browser.IE);
+		} else if (browse.equalsIgnoreCase("Firefox")) {
+			browser.setBrowser(Browser.Firefox);
+		}
+	}
+
+	/**
+	 * Navigate To The application
+	 */
+	public void navigateToTheApplication() {
+		driverHelper = new DriverHelper(driver);
+		driver.navigate().to(url);
+		driver.manage().window().maximize();
+		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+	}
+
+	/**
+	 * Login To The Application
+	 * 
+	 * @param <T>
+	 * @param classname
+	 * @return
+	 * @throws Exception
+	 */
+	public <T> T loginToTheApplication(Class<T> classname) throws Exception {
+		loginHelper = new LoginHelper(driver);
+		GlobalDataProvider gdp=new GlobalDataProvider("TestData.xslx");
+		map=new HashMap<Object, List<Object>>();
+		map=GlobalDataProvider.getData("Anurag");
+		map.forEach(key,value->{
+			
+		});
+		navigateToTheApplication();
+		loginHelper.setUserName(userName);
+		loginHelper.setPassword(password);
+		loginHelper.clickOnLoginButton();
+		return PageFactory.initElements(driver, classname);
+	}
+
+	/**
+	 * Get the driver refrence
+	 * 
+	 * @return
+	 */
+	public WebDriver getDriver() {
+		return this.driver;
+	}
+}
